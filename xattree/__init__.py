@@ -311,7 +311,7 @@ _XTRA_GETTERS = {
 }
 
 
-def _chexpand(value: ArrayLike, shape: tuple[int]) -> Optional[NDArray]:
+def _chexpand(value: ArrayLike, shape: tuple[int]) -> ArrayLike:
     if (shp := np.shape(value)) == ():
         return np.full(shape, value)
     if shp != shape:
@@ -639,7 +639,7 @@ def _init_tree(self: Any, strict: bool = True, where: str = _WHERE_DEFAULT):
 
     def _resolve_array(
         xat: _Xattribute, value: ArrayLike, strict: bool = False, **dims
-    ) -> Optional[NDArray]:
+    ) -> Optional[ArrayLike]:
         dims = dims or {}
         match xat:
             case _Coord():
@@ -751,7 +751,7 @@ def _init_tree(self: Any, strict: bool = True, where: str = _WHERE_DEFAULT):
     # resolve dimensions/coordinates before arrays
     coordinates = dict(list(_yield_coords()))
 
-    def _yield_arrays() -> Iterator[tuple[str, NDArray | tuple[tuple[str, ...], NDArray]]]:
+    def _yield_arrays() -> Iterator[tuple[str, ArrayLike | tuple[tuple[str, ...], ArrayLike]]]:
         for xat in xatspec.arrays.values():
             if (
                 array := _resolve_array(
